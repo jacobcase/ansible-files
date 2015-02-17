@@ -1,0 +1,13 @@
+---
+# May want to increase the amount of memory in the container.
+# should be investigated further.
+# Also, requires Ansible 1.9
+# TODO: investigate volumes with default(None)
+- name: run mongodb
+  docker:
+    image: "dockerfile/mongodb"
+    name: mongodb
+    restart_policy: "on-failure"
+    state: running
+
+

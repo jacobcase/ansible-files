@@ -1,0 +1,13 @@
+---
+
+- name: install common apt packages
+  apt:
+    pkg: "{{ item }}"
+    state: installed
+    update_cache: yes
+    cache_valid_time: "{{ CACHE_VALID_TIME | default(3600) }}"
+  with_items:
+    - htop
+    - python-pip
+    - git
+    - vim

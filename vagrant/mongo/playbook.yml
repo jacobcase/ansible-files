@@ -1,0 +1,6 @@
+---
+- hosts: all
+  roles:
+    - common_package
+    - docker
+    - mongo_docker

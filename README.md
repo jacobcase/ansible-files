@@ -9,3 +9,8 @@ My Ansible playbooks for...whatever I need.
 * Basic Firewall setup. Use Jinja, iptables persist, etc
 * OpenStack........
 * etc, etc
+
+
+### Issues
+* Docker module doesn't restart container when a volume changes
+* Cannot use default(omit) with variables that are part of a string

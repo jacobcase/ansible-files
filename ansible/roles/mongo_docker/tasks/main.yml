@@ -9,5 +9,20 @@
     name: mongodb
     restart_policy: "on-failure"
     state: running
+  when: mongo_docker_vol is not defined
 
 
+- name: check if data directory exists
+  file:
+    path: "{{mongo_docker_vol}}"
+    state: directory
+  when: mongo_docker_vol is defined
+
+- name: run mongodb with volume
+  docker:
+    image: "dockerfile/mongodb"
+    name: mongodb
+    restart_policy: "on-failure"
+    state: running
+    volumes: "{{ mongo_docker_vol|default(omit) }}:/data/db"
+  when: mongo_docker_vol is defined

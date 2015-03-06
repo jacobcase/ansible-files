@@ -2,7 +2,7 @@
 # May want to increase the amount of memory in the container.
 # should be investigated further.
 # Also, requires Ansible 1.9
-# TODO: investigate volumes with default(None)
+# TODO: investigate volumes with default(omit)
 - name: run mongodb
   docker:
     image: "dockerfile/mongodb"

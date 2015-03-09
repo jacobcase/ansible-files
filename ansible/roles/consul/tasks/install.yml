@@ -1,0 +1,43 @@
+
+- name: add consul user
+  user:
+    createhome: no
+    system: yes
+    state: present
+    name: consul
+
+- name: ensure unzip package
+  apt:
+    name: unzip
+    state: present
+
+- name: check for consul existence
+  stat: 
+    path: /usr/local/bin/consul
+  register: consul_bin
+
+# TODO: 64 bit vs 32 bit, differentiate...maybe?
+- name: download consul
+  get_url:
+    url: "https://dl.bintray.com/mitchellh/consul/0.5.0_linux_amd64.zip"
+    dest: /tmp/
+  when: not consul_bin.stat.exists
+
+- name: unzip consul
+  unarchive:
+    copy: no
+    src: "/tmp/0.5.0_linux_amd64.zip"
+    dest: "/usr/local/bin"
+    owner: consul
+    mode: "u=rwx,g=rx,o=r"
+  when: not consul_bin.stat.exists
+
+- name: configuring consul
+  template:
+    src: config.json.j2
+    dest: /usr/local/etc/consul.json
+
+- name: add consul service
+  copy:
+    src: consul.conf
+    dest: /etc/init/consul.conf

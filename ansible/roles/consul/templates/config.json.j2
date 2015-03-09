@@ -1,0 +1,11 @@
+{
+    "datacenter": "{{consul_datacenter}}",
+    "log_level": "INFO",
+    "server": {{consul_server}},
+    "enable_syslog": true,
+    {% if consul_bind_addr is defined %}
+    "bind_addr": "{{consul_bind_addr}}",
+    {% endif %}
+    "data_dir": "/var/lib/consul"
+
+}

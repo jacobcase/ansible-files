@@ -3,7 +3,7 @@
 - name: install common apt packages
   apt:
     pkg: "{{ item }}"
-    state: installed
+    state: latest
     update_cache: yes
     cache_valid_time: "{{ common_cache_valid_time | default(3600) }}"
   with_items:
@@ -11,3 +11,10 @@
     - python-pip
     - git
     - vim
+    - "debconf-utils"
+
+- name: update system
+  apt:
+    update_cache: yes
+    cache_valid_time: "{{ common_cache_valid_time | default(3600) }}"
+    upgrade: dist

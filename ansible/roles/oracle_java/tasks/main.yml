@@ -1,0 +1,26 @@
+
+# This is necessary if you're using apt-cache-server like i am.
+# by default apt-cache-server restricts the format of packages with regex,
+# but that can be changed, as well as using just a general proxy server
+- name: configure java proxy exception
+  copy:
+    src: "99-java"
+    dest: "/etc/apt/apt.conf.d/99-java"
+
+- name: Add ppa for webupd8 team oracle java installer
+  apt_repository:
+    repo: 'ppa:webupd8team/java'
+    update_cache: yes
+
+- name: configure java licence accept
+  debconf:
+    name: "oracle-java8-installer"
+    vtype: select
+    value: "true"
+    question: "shared/accepted-oracle-license-v1-1"
+ 
+    
+- name: install oracle java
+  apt:
+    name: "oracle-java8-installer"
+    state: latest

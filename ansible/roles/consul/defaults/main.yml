@@ -1,0 +1,4 @@
+---
+consul_datacenter: "datacenter1"
+consul_server: "true"
+

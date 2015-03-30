@@ -3,7 +3,7 @@
 - name: install common apt packages
   apt:
     pkg: "{{ item }}"
-    state: installed
+    state: latest
     update_cache: yes
     cache_valid_time: "{{ common_cache_valid_time | default(3600) }}"
   with_items:
@@ -12,3 +12,36 @@
     - git
     - vim
     - unzip
+    - "debconf-utils"
+
+- name: update system
+  apt:
+    update_cache: yes
+    cache_valid_time: "{{ common_cache_valid_time | default(3600) }}"
+    upgrade: dist
+
+
+- stat:
+    path: "/var/run/reboot-required"
+  register: reboot_check_stat
+
+- debug:
+    msg: "Reboot is required on this host!!"
+  when: reboot_check_stat.stat.exists == true
+
+
+  # From support.ansible.com tips and tricks!
+- name: reboot host if allowed and required
+  command: shutdown -r now "Restart triggered by Ansible for updates"
+  async: 0
+  poll: 0
+  ignore_errors: true
+  when: reboot_check_stat.stat.exists == true and {{allow_update_reboot | default(false)}}
+
+
+  # TODO: figure out port variable rather than hard code
+- name: waiting for server to come back
+  local_action: wait_for host="{{ansible_ssh_host}}" state=started port=22
+  when: reboot_check_stat.stat.exists == true and {{allow_update_reboot | default(false)}}
+
+

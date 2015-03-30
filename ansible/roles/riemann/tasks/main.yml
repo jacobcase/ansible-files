@@ -1,0 +1,14 @@
+
+#- name: check for riemann existence
+
+
+- name: pull riemann package
+  get_url:
+    url: "{{riemann_url}}"
+    dest: "/root/{{riemann_deb_name}}"
+
+- name: install riemann
+  apt:
+    deb: "/root/{{riemann_deb_name}}"
+
+

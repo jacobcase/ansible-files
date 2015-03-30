@@ -1,0 +1,4 @@
+
+Acquire::http::Proxy {
+    download.oracle.com DIRECT;
+};

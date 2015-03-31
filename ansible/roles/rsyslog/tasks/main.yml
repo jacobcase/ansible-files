@@ -1,0 +1,11 @@
+
+- name: add latest stable rsyslog repo
+  apt_repository:
+    repo: "ppa:adiscon/v8-stable"
+  notify:
+    - update cache
+
+- name: install latest rsyslog
+  apt:
+    name: rsyslog
+    state: latest

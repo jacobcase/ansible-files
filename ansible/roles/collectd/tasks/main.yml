@@ -1,0 +1,7 @@
+
+- name: install collectd
+  apt:
+    name: collectd
+    state: present
+
+

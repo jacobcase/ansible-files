@@ -1,0 +1,12 @@
+
+DOCKER_OPTS=""
+
+{% for reg in docker_insecure_registries %}
+DOCKER_OPTS="$DOCKER_OPTS --insecure-registry {{ reg }}"
+{% endfor %}
+
+{% if docker_registry_mirror is defined %}
+DOCKER_OPTS="$DOCKER_OPTS --registry-mirror={{ docker_registry_mirror }}"
+{% endif %}
+
+

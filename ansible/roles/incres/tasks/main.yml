@@ -1,0 +1,18 @@
+
+
+- name: copy the incident response configuration
+  template:
+    src: incres.yml.j2
+    dest: /usr/local/etc/incres.yml
+
+- name: install incident response indexer
+  docker:
+    command: "python3 -m incres.logging.dbtools.indexer -c /incres.yml"
+    image: "{{ incres_docker_image }}"
+    pull: always
+    name: "incres_indexer"
+    state: reloaded
+    volumes:
+      - "/usr/local/etc/incres.yml:/incres.yml"
+    
+

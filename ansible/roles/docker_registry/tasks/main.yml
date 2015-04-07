@@ -7,7 +7,7 @@
 - name: run registry image
   docker:
     env:
-      DOCKER_REGISTRY_CONF: /registry.yml
+      DOCKER_REGISTRY_CONFIG: /registry.yml
     image: registry
     name: docker-registry
     ports:

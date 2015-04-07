@@ -1,0 +1,13 @@
+---
+
+dev:
+    standalone: true
+    loglevel: info
+    storage: file
+    storage_path: /data/registry/store
+    mirroring:
+        source: https://registry-1.docker.io
+        source_index: https://index.docker.io
+        tags_cache_ttl: 3600
+    search_backend: sqlalchemy
+    sqlalchemy_index_database: sqlite:////data/registry/index.db

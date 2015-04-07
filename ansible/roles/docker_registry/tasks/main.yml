@@ -1,0 +1,20 @@
+
+- name: copy registry config
+  template:
+    dest: "{{ docker_registry_conf }}"
+    src: registry.yml.j2
+
+- name: run registry image
+  docker:
+    env:
+      DOCKER_REGISTRY_CONF: /registry.yml
+    image: registry
+    name: docker-registry
+    ports:
+      - "5000:5000"
+    volumes:
+      - "{{ docker_registry_conf }}:/registry.yml"
+      - "{{ docker_registry_data }}:/data/registry"
+    state: reloaded
+    pull: always
+    restart_policy: always

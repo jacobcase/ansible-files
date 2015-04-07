@@ -1,0 +1,4 @@
+
+docker_registry_conf: /usr/local/etc/registry.yaml
+
+docker_registry_data: /data/registry/

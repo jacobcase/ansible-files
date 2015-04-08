@@ -21,7 +21,8 @@
     dest: /etc/default/docker
   notify:
     - restart docker
-  
+
+- meta: flush_handlers  
 # Since the Ansible Docker module will probably be used
 # later, might as well install docker-py, as it's required
 - name: install docker-py

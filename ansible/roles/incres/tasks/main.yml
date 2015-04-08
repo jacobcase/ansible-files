@@ -8,11 +8,71 @@
 - name: install incident response indexer
   docker:
     command: "python3 -m incres.logging.dbtools.indexer -c /incres.yml"
+    insecure_registry: yes
     image: "{{ incres_docker_image }}"
     pull: always
     name: "incres_indexer"
     state: reloaded
+    restart_policy: always
     volumes:
       - "/usr/local/etc/incres.yml:/incres.yml"
+  when: incres_indexer
+
+
+- name: install incident response culler
+  docker:
+    command: "python3 -m incres.logging.dbtools.culler -c /incres.yml"
+    insecure_registry: yes
+    image: "{{ incres_docker_image }}"
+    pull: always
+    name: "incres_culler"
+    state: reloaded
+    restart_policy: always
+    volumes:
+      - "/usr/local/etc/incres.yml:/incres.yml"
+  when: incres_culler
     
 
+- name: install incident response firewall nat built
+  docker:
+    command: "python3 -m incres.logging.firewall.nat_built -c /incres.yml"
+    insecure_registry: yes
+    image: "{{ incres_docker_image }}"
+    pull: always
+    name: "incres_nat_built"
+    state: reloaded
+    restart_policy: always
+    volumes:
+      - "/usr/local/etc/incres.yml:/incres.yml"
+      - "/data/firewall:/data/firewall"
+  when: incres_nat_built
+
+
+- name: install incident response firewall nat teardown
+  docker:
+    command: "python3 -m incres.logging.firewall.nat_teardown -c /incres.yml"
+    insecure_registry: yes
+    image: "{{ incres_docker_image }}"
+    pull: always
+    name: "incres_nat_teardown"
+    state: reloaded
+    restart_policy: always
+    volumes:
+      - "/usr/local/etc/incres.yml:/incres.yml"
+      - "/data/firewall:/data/firewall"
+  when: incres_nat_teardown
+
+
+- name: install incident response dhcp
+  docker:
+    command: "python3 -m incres.logging.mac.dhcp_ack -c /incres.yml"
+    insecure_registry: yes
+    image: "{{ incres_docker_image }}"
+    pull: always
+    name: "incres_dhcp_ack"
+    state: reloaded
+    restart_policy: always
+    volumes:
+      - "/usr/local/etc/incres.yml:/incres.yml"
+      - "/data/dhcp:/data/dhcp"
+  when: incres_dhcp

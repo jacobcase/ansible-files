@@ -5,6 +5,8 @@
     src: incres.yml.j2
     dest: /usr/local/etc/incres.yml
 
+    #TODO: handler for configuration changes
+
 - name: install incident response indexer
   docker:
     command: "python3 -m incres.logging.dbtools.indexer -c /incres.yml"
@@ -76,3 +78,22 @@
       - "/usr/local/etc/incres.yml:/incres.yml"
       - "/data/dhcp:/data/dhcp"
   when: incres_dhcp
+
+
+
+- name: install incident response web
+  docker:
+    command: "python3 -m incres.web -c /incres.yml"
+    insecure_registry: yes
+    image: "{{ incres_docker_image }}"
+    pull: always
+    name: "incres_web"
+    state: reloaded
+    restart_policy: always
+    ports:
+      - "8080:80"
+    volumes:
+      - "/usr/local/etc/incres.yml:/incres.yml"
+  when: incres_web
+
+

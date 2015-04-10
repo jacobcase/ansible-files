@@ -90,10 +90,25 @@
     name: "incres_web"
     state: reloaded
     restart_policy: always
+    expose:
+      - 8080
     ports:
-      - "8080:80"
+      - "8080:8080"
     volumes:
       - "/usr/local/etc/incres.yml:/incres.yml"
   when: incres_web
 
 
+- name: install incident response arp
+  docker:
+    command: "python3 -m incres.logging.mac.arp -c /incres.yml"
+    insecure_registry: yes
+    image: "{{ incres_docker_image }}"
+    pull: always
+    name: "incres_arp"
+    state: reloaded
+    restart_policy: always
+    volumes:
+      - "/usr/local/etc/incres.yml:/incres.yml"
+      - "/data/arp:/data/arp"
+  when: incres_arp

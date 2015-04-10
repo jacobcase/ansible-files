@@ -20,11 +20,11 @@ logging:
         log-path: "/data/dhcp/dhcp.log"
 
     arp:
-        directory: "path/to/dir"
+        directory: "/data/arp"
         file-prefix: "macdump"
 
 web:
-    port: 80
+    port: 8080
     cas-auth: !!bool false 
     use-ssl: !!bool false
     ssl-cert: "/path/to/cert.crt"

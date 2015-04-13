@@ -6,5 +6,5 @@
   notify:
     - sysctl load
 
-- meta: flush handlers
+- meta: flush_handlers
 

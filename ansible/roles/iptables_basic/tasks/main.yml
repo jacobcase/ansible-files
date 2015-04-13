@@ -1,0 +1,10 @@
+
+- name: set timeouts
+  template:
+    src: conntrack_timeouts.conf.j2 
+    dest: /etc/sysctl.d/conntrack_timeouts.conf
+  notify:
+    - sysctl load
+
+- meta: flush handlers
+

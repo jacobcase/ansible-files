@@ -6,45 +6,51 @@ mongo-urls:
     dhcp-ack: "{{ incres_db_dhcp_ack }}"
     arp: "{{ incres_db_arp }}"
 
+events:
+    nat_built:
+        database: "{{ incres_db_nat_built }}"
+        age_days: 30
+        index_lag_hours: 2
+        log_path: "/logs/firewall/fw.log"
 
-logging:
-    nat-built:
-        workers: 2
-        log-path: "/data/firewall/fw.log"
+    nat_teardown:
+        database: "{{ incres_db_nat_teardown }}"
+        age_days: 30
+        index_lag_hours: 2
+        log_path: "/logs/firewall/fw.log"
 
-    nat-teardown:
-        workers: 2
-        log-path: "/data/firewall/fw.log"
-
-    dhcp-ack:
-        log-path: "/data/dhcp/dhcp.log"
+    dhcp:
+        database: "{{ incres_db_dhcp_ack }}"
+        age_days: 30
+        index_lag_hours: 2
+        log_path: "/logs/dhcp/dhcp.log"
 
     arp:
-        directory: "/data/arp"
-        file-prefix: "macdump"
+        database: "{{ incres_db_arp }}"
+        age_days: 30
+        index_lag_hours: 2
+        directory: "/logs/arp"
+        file_prefix: "macdump"
+        date_format: "YYYYMMDD.HHmm"
+
+correlation:
+    connection:
+        database: "{{ incres_db_connection }}"
+        smtp_server: "{{ incres_smtp_server }}"
+        ticket_email: "{{ incres_ticket_email }}"
 
 web:
-    port: 8080
-    cas-auth: !!bool false 
-    use-ssl: !!bool false
-    ssl-cert: "/path/to/cert.crt"
-    ssl-key: "/path/to/key.key"
-    user: "nobody"
+    database: "{{ incres_db_web }}"
+    port: 80
     session-key: "{{ incres_session_key }}"
-    debug: !!bool false
-    debug-src: "path/to/static"                                 
+    auth:
+        users: "{{ incres_web_users }}"
+            
     
+external:
+    airwave:
+        user: "{{ incres_airwave_user }}"
+        password: "{{ incres_airwave_pw }}"
+        url: "{{ incres_airwave_url }}"
 
-airwave:
-    user: "{{ incres_airwave_user }}"
-    password: "{{ incres_airwave_pw }}"
-    url: "{{ incres_airwave_url }}"
-
-
-indexer:
-    lag-hours: 1
-
-
-culler:
-    age-days: 14
 

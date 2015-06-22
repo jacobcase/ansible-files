@@ -7,93 +7,73 @@
 
     #TODO: handler for configuration changes
 
-- name: install incident response indexer
-  docker:
-    command: "python3 -m incres.logging.dbtools.indexer -c /incres.yml"
-    insecure_registry: yes
-    image: "{{ incres_docker_image }}"
-    pull: always
-    name: "incres_indexer"
-    state: reloaded
-    restart_policy: always
-    volumes:
-      - "/usr/local/etc/incres.yml:/incres.yml"
-  when: incres_indexer
 
-
-- name: install incident response culler
-  docker:
-    command: "python3 -m incres.logging.dbtools.culler -c /incres.yml"
-    insecure_registry: yes
-    image: "{{ incres_docker_image }}"
-    pull: always
-    name: "incres_culler"
-    state: reloaded
-    restart_policy: always
-    volumes:
-      - "/usr/local/etc/incres.yml:/incres.yml"
-  when: incres_culler
-    
 
 - name: install incident response firewall nat built
   docker:
-    command: "python3 -m incres.logging.firewall.nat_built -c /incres.yml"
+    command: "incres {{ incres_options }} -c /incres.yml nat-built"
     insecure_registry: yes
     image: "{{ incres_docker_image }}"
     pull: always
     name: "incres_nat_built"
     state: reloaded
     restart_policy: always
+    dns: "{{ incres_dns | default(omit) }}"
+    net: "host"
     volumes:
       - "/usr/local/etc/incres.yml:/incres.yml"
-      - "/data/firewall:/data/firewall"
+      - "{{ incres_logs_fw_dir }}:/logs/firewall"
   when: incres_nat_built
 
 
 - name: install incident response firewall nat teardown
   docker:
-    command: "python3 -m incres.logging.firewall.nat_teardown -c /incres.yml"
+    command: "incres {{ incres_options }} -c /incres.yml nat-teardown"
     insecure_registry: yes
     image: "{{ incres_docker_image }}"
     pull: always
     name: "incres_nat_teardown"
     state: reloaded
     restart_policy: always
+    dns: "{{ incres_dns | default(omit) }}"
+    net: "host"
     volumes:
       - "/usr/local/etc/incres.yml:/incres.yml"
-      - "/data/firewall:/data/firewall"
+      - "{{ incres_logs_fw_dir }}:/logs/firewall"
   when: incres_nat_teardown
 
 
 - name: install incident response dhcp
   docker:
-    command: "python3 -m incres.logging.mac.dhcp_ack -c /incres.yml"
+    command: "incres {{ incres_options }} -c /incres.yml dhcp-ack"
     insecure_registry: yes
     image: "{{ incres_docker_image }}"
     pull: always
     name: "incres_dhcp_ack"
     state: reloaded
     restart_policy: always
+    dns: "{{ incres_dns | default(omit) }}"
+    net: "host"
     volumes:
       - "/usr/local/etc/incres.yml:/incres.yml"
-      - "/data/dhcp:/data/dhcp"
+      - "{{ incres_logs_dhcp_dir}}:/logs/dhcp"
   when: incres_dhcp
 
 
 
 - name: install incident response web
   docker:
-    command: "python3 -m incres.web -c /incres.yml"
+    command: "incres {{ incres_web_options }} -c /incres.yml web"
     insecure_registry: yes
     image: "{{ incres_docker_image }}"
     pull: always
     name: "incres_web"
     state: reloaded
     restart_policy: always
+    dns: "{{ incres_dns | default(omit) }}"
+    net: "host"
     expose:
-      - 8080
-    ports:
-      - "8080:8080"
+      - "{{ incres_web_port }}"
     volumes:
       - "/usr/local/etc/incres.yml:/incres.yml"
   when: incres_web
@@ -101,14 +81,16 @@
 
 - name: install incident response arp
   docker:
-    command: "python3 -m incres.logging.mac.arp -c /incres.yml"
+    command: "incres {{ incres_options }} -c /incres.yml arp"
     insecure_registry: yes
     image: "{{ incres_docker_image }}"
     pull: always
     name: "incres_arp"
     state: reloaded
     restart_policy: always
+    dns: "{{ incres_dns | default(omit) }}"
+    net: "host"
     volumes:
       - "/usr/local/etc/incres.yml:/incres.yml"
-      - "/data/arp:/data/arp"
+      - "{{ incres_logs_arp_dir }}:/logs/arp"
   when: incres_arp

@@ -1,0 +1,27 @@
+---
+
+- name: add postgres repository
+  apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ squeeze-pgdg main"
+    state: present
+
+- name: trust postgres repository
+  apt_key:
+    url: "http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc"
+    state: present
+
+- name: install postgresql
+  apt:
+    name: postgresql-9.4
+    state: present
+  when: not postgresql_upgrade
+
+
+  # upgrade postgresql to the latest only if the default variable set to false
+  # is changed to true. Best to do when using the Ansible "serial" option
+  # for rolling upgrades to ensure uptime in an HA environment
+- name: install or upgrade postgresql
+  apt:
+    name: postgresql-9.4
+    state: latest
+  when: postgresql_upgrade

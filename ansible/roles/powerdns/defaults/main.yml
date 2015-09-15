@@ -1,0 +1,8 @@
+---
+
+powerdns_pg_backend: false
+
+# Will only be included when a supported backend is used
+powerdns_rest_api: false
+
+powerdns_pg_user: "powerdns"

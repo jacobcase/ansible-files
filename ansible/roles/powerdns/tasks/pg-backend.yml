@@ -1,0 +1,7 @@
+---
+
+- name: add powerdns postgresql user
+  postgresql_user:
+    name: "{{powerdns_pg_user}}"
+    state: present
+    password: "{{powerdns_pg_pw|default(omit)}}"

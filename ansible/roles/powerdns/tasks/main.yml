@@ -1,0 +1,13 @@
+---
+
+
+- name: install powerdns server
+  apt:
+    name: pdns-server
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+
+- include: pg-backend.yml
+  when: powerdns_pg_backend

@@ -1,5 +1,8 @@
 ---
 - hosts: all
+  vars:
+    powerdns_pg_backend: true
+    powerdns_db_pw: "password=1"
   roles:
     - postgresql
     - powerdns

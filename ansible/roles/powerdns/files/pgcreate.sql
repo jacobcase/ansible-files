@@ -1,4 +1,4 @@
-CREATE TABLE domains (
+CREATE TABLE IF NOT EXISTS domains (
   id                    SERIAL PRIMARY KEY,
   name                  VARCHAR(255) NOT NULL,
   master                VARCHAR(128) DEFAULT NULL,

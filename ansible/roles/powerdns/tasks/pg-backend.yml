@@ -1,7 +1,35 @@
 ---
 
+
 - name: add powerdns postgresql user
   postgresql_user:
-    name: "{{powerdns_pg_user}}"
+    name: "{{powerdns_db_user|default("powerdns")}}"
     state: present
-    password: "{{powerdns_pg_pw|default(omit)}}"
+    password: "{{powerdns_db_pw|default(omit)}}"
+    role_attr_flags: "LOGIN"
+    db: "{{powerdns_db_name|default("powerdns")}}"
+  delegate_to: "{{ powerdns_db_host|default(inventory_host)}}"
+  when: false
+
+- name: install powerdns postgres backend
+  apt:
+    name: pdns-backend-pgsql
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  notify:
+    - restart powerdns
+
+- name: removing powerdns bind configuration
+  file:
+    path: "/etc/powerdns/pdns.d/pdns.simplebind.conf"
+    state: absent
+  notify:
+    - restart powerdns
+
+
+
+
+- name: create powerdns postgres database
+  postgresql_db:
+    name: "{{powerdns_db_name|default(powerdns)}}"
